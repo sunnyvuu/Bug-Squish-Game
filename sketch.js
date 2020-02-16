@@ -2,7 +2,7 @@ var guy = [];
 var speed = 1;
 var score = 0;
 var count = 25;
-var timer = 30;
+var timer = 3;
 var bg;
 
 function preload(){
@@ -42,8 +42,10 @@ function draw(){
   text("Time Left: " + timer, 1080, 30);
   if (timer == 0)
   {
-    text("GAME OVER", width/2-100, height/2);
-    text("You scored: " + score, width/2-100, height/2 + 40)
+    textSize(50);
+    text("GAME OVER", width/2-185, height/2);
+    text("You scored: " + score, width/2-185, height/2 + 40)
+    undraw();
   }
   if ((frameCount % 60 == 0) && (timer > 0)){
     timer--;
