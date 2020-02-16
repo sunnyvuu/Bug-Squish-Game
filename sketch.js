@@ -2,7 +2,7 @@ var guy = [];
 var speed = 1;
 var score = 0;
 var count = 25;
-var timer = 3;
+var timer = 30;
 var bg;
 
 function preload(){
