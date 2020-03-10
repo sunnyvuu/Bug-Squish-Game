@@ -2,8 +2,9 @@ var guy = [];
 var speed = 1;
 var score = 0;
 var count = 25;
-var timer = 30;
+var timer = 3;
 var bg;
+var screen = 0;
 
 function preload(){
   for(var i = 0; i < count; i++)
@@ -21,6 +22,12 @@ function setup() {
 
 
 function mouseClicked(){
+  // to transition from start screen to play screen
+  if (screen == 0)
+  {
+    screen = 1;
+  }
+
   // if click on Walker
   for (var i = 0; i < count; i++)
   {
@@ -28,7 +35,15 @@ function mouseClicked(){
   }
 }
 
-function draw(){
+function startScreen(){
+  background(100);
+  fill(255)
+  textAlign(CENTER);
+  text('GET READY TO SQUISH BUGS', width / 2, height / 2)
+  text('click to start', width / 2, height / 2 + 40);
+}
+
+function playScreen(){
   push();
   imageMode(CORNER);
   background(bg);
@@ -38,17 +53,29 @@ function draw(){
   {
     guy[i].draw();
   }
-  text("Score: " + score, 20, 30);
-  text("Time Left: " + timer, 1080, 30);
+  text("Score: " + score, 70, 30);
+  text("Time Left: " + timer, 1180, 30);
   if (timer == 0)
   {
     textSize(50);
-    text("GAME OVER", width/2-185, height/2);
-    text("You scored: " + score, width/2-185, height/2 + 40)
+    text("GAME OVER", width/2, height/2);
+    text("You scored: " + score, width/2, height/2 + 40)
+    text("Refresh to play again.", width/2, height/2 + 80);
     undraw();
   }
   if ((frameCount % 60 == 0) && (timer > 0)){
     timer--;
+  }
+}
+
+function draw(){
+  if (screen == 0)
+  {
+    startScreen();
+  }
+  else if (screen == 1)
+  {
+    playScreen();
   }
 }
 
