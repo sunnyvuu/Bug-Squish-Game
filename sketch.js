@@ -2,16 +2,23 @@ var guy = [];
 var speed = 1;
 var score = 0;
 var count = 25;
-var timer = 3;
-var bg;
+var timer = 30;
 var screen = 0;
+var bg;
+var bgm;
+var squish_sound;
+var bgm_end;
 
 function preload(){
   for(var i = 0; i < count; i++)
   {
-    guy[i] = new Walker("roach.png", random(1280), random(480), random([-2,-1,1,2]), 1);
+    guy[i] = new Walker("/image files/roach.png", random(1280), random(480), random([-2,-1,1,2]), 1);
   }
-  bg = loadImage("floor.jpg");
+  bg = loadImage("/image files/floor.jpg");
+
+  bgm = new Tone.Player("/sound files/bgm.mp3").toMaster();
+  squish_sound = new Tone.Player("/sound files/bug_squish.mp3").toMaster();
+  bgm_end = new Tone.Player("/sound files/game_over.mp3").toMaster();
 }
 function setup() {
   createCanvas(1280,480);
@@ -19,12 +26,20 @@ function setup() {
   imageMode(CENTER);
 }
 
-
+function startContext() {
+	console.log("Tone is: ", Tone.context.state)
+	document.body.addEventListener("click", () => {
+		Tone.context.resume();
+		console.log("Tone is: ", Tone.context.state);
+	});
+}
 
 function mouseClicked(){
   // to transition from start screen to play screen
   if (screen == 0)
   {
+    bgm.start();
+    bgm.loop = true;
     screen = 1;
   }
 
@@ -55,30 +70,32 @@ function playScreen(){
   }
   text("Score: " + score, 70, 30);
   text("Time Left: " + timer, 1180, 30);
-  if (timer == 0)
+  if (timer == 0) //if timer hits 0
   {
+    bgm.stop();
     textSize(50);
     text("GAME OVER", width/2, height/2);
     text("You scored: " + score, width/2, height/2 + 40)
     text("Refresh to play again.", width/2, height/2 + 80);
+    bgm_end.start();
     undraw();
   }
-  if ((frameCount % 60 == 0) && (timer > 0)){
-    timer--;
+
+  if (score == 25) //if all roaches are killed
+  {
+    bgm.stop();
+    score += timer;
+    textSize(50);
+    text("YOU WIN", width/2, height/2);
+    text("You scored: " + score, width/2, height/2 + 40)
+    text("Refresh to play again.", width/2, height/2 + 80);
+    bgm_end.start();
+    undraw();
+  }
+  if ((frameCount % 60 == 0) && (timer > 0)){ 
+    timer--; //decrements timer by 1 every 60 frames
   }
 }
-
-function draw(){
-  if (screen == 0)
-  {
-    startScreen();
-  }
-  else if (screen == 1)
-  {
-    playScreen();
-  }
-}
-
 
 function Walker(imageName, x, y, moving, alive){
   this.spriteSheet = loadImage(imageName);
@@ -94,12 +111,15 @@ function Walker(imageName, x, y, moving, alive){
   this.kill = function(x,y){
     if(this.x-30<x && x < this.x+30 && this.y-30<y && y<this.y+30){
       this.moving = 0;  
-      if (this.alive == 1)
+      if (this.alive == 1){
+        squish_sound.start();
+        bgm.playbackRate *= 1.02;
         speed = speed + .3;
         score = score + 1;
         this.alive = 0;
     }
   }
+}
 
 
   this.draw = function(){
@@ -163,5 +183,16 @@ function Walker(imageName, x, y, moving, alive){
       }
     }
     pop();
+  }
+}
+
+function draw(){
+  if (screen == 0)
+  {
+    startScreen();
+  }
+  else if (screen == 1)
+  {
+    playScreen();
   }
 }
