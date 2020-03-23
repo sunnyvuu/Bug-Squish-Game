@@ -12,13 +12,13 @@ var bgm_end;
 function preload(){
   for(var i = 0; i < count; i++)
   {
-    guy[i] = new Walker("/image files/roach.png", random(1280), random(480), random([-2,-1,1,2]), 1);
+    guy[i] = new Walker("https://res.cloudinary.com/dtjsaaj5f/image/upload/v1584928241/roach_mg12yv.png", random(1280), random(480), random([-2,-1,1,2]), 1);
   }
-  bg = loadImage("/image files/floor.jpg");
+  bg = loadImage("https://res.cloudinary.com/dtjsaaj5f/image/upload/v1584928241/floor_ksmmjj.jpg");
 
-  bgm = new Tone.Player("/sound files/bgm.mp3").toMaster();
-  squish_sound = new Tone.Player("/sound files/bug_squish.mp3").toMaster();
-  bgm_end = new Tone.Player("/sound files/game_over.mp3").toMaster();
+  bgm = new Tone.Player("https://res.cloudinary.com/dtjsaaj5f/video/upload/v1584928263/bgm_kaiel7.mp3").toMaster();
+  squish_sound = new Tone.Player("https://res.cloudinary.com/dtjsaaj5f/video/upload/v1584928262/bug_squish_tivmrz.mp3").toMaster();
+  bgm_end = new Tone.Player("https://res.cloudinary.com/dtjsaaj5f/video/upload/v1584928262/game_over_blzyjy.mp3").toMaster();
 }
 function setup() {
   createCanvas(1280,480);
